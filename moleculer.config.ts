@@ -27,14 +27,14 @@ import {BrokerOptions, Errors, MetricRegistry, ServiceBroker} from "moleculer";
  *  }
  */
 const brokerConfig: BrokerOptions = {
-	// Namespace of nodes to segment your nodes on the same network.
-	namespace: "",
+// Namespace of nodes to segment your nodes on the same network.
+	namespace: "moleculer-implements",
 	// Unique node identifier. Must be unique in a namespace.
-	nodeID: null,
-	// Custom metadata store. Store here what you want. Accessing: `this.broker.metadata`
+	nodeID: "m01",
+// Custom metadata store. Store here what you want. Accessing: `this.broker.metadata`
 	metadata: {},
 
-	// Enable/disable logging or use custom logger. More info: https://moleculer.services/docs/0.14/logging.html
+// Enable/disable logging or use custom logger. More info: https://moleculer.services/docs/0.14/logging.html
 	// Available logger types: "Console", "File", "Pino", "Winston", "Bunyan", "debug", "Log4js", "Datadog"
 	logger: {
 		type: "Console",
