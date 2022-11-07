@@ -4,7 +4,7 @@
   "description": "My Moleculer-based microservices project",
   "scripts": {
     "build": "tsc --build tsconfig.json",
-    "dev": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js --hot --repl --config moleculer.config.ts services/**/*.service.ts",
+    "dev": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js --hot --repl --config moleculer.config.ts microservices/**/**/*.service.ts",
     "start": "moleculer-runner --config dist/moleculer.config.js",
     "cli": "moleculer connect Kafka",
     "ci": "jest --watch",
@@ -12,7 +12,9 @@
     "lint": "eslint --ext .js,.ts .",
     "dc:up": "docker-compose up --build -d",
     "dc:logs": "docker-compose logs -f",
-    "dc:down": "docker-compose down"
+    "dc:down": "docker-compose down",
+    "development": "set NODE_ENV=development&& node server.js",
+    "production": "set NODE_ENV=production&& node server.js"
   },
   "keywords": [
     "microservices",
@@ -36,6 +38,7 @@
     "@types/mkdirp": "^1.0.0",
     "@types/node": "^18.11.4",
     "dotenv": "^16.0.3",
+    "dotenv-safe": "^8.2.0",
     "ioredis": "^4.14.1",
     "jaeger-client": "^3.19.0",
     "kafka-node": "^5.0.0",

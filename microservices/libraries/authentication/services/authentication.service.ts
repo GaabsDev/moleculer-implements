@@ -1,13 +1,13 @@
 "use strict";
 
 import { Service as MoleculerService, ServiceBroker, Context } from "moleculer";
-import { Service } from 'moleculer-decorators'
 import { Req_Auth } from "../src/interface/token.interface";
+import * as dotenv from 'dotenv'
+import { tokenJwt } from "../src/repository/token.repository";
 
-@Service({
-	name: 'authentication',
-	group: 'authentication'
-})
+dotenv.config()
+
+
 export default class AuthenticationService extends MoleculerService {
 
 	public constructor(public broker: ServiceBroker) {
@@ -15,24 +15,35 @@ export default class AuthenticationService extends MoleculerService {
 		this.parseServiceSchema({
 			actions: {
 				jwt: {
-					rest: "/jwt",
-					params: {
-						user: "string",
-						password: "string",
-						secrety: "string",
+					rest: {
+						method: 'POST',
+						basePath: 'auth/',
+						path: 'jwt/'
 					},
-					async handler(ctx: Context<{ user: string, password: string, secrety: string }>): Promise<Req_Auth> {
+					params: {
+						username: "string",
+						password: "string",
+						secret: "string",
+					},
+					async handler(ctx: Context<{ user: string; password: string; secrety: string; }>): Promise<Req_Auth> {
 						return this.ActionJWT(ctx.params);
 					},
 				},
 			},
-			name: 'authentication'
+			name: 'authentication',
+			group: 'authentication'
 		});
 	}
 
-	// Action
-	public ActionJWT(): string {
+	public ActionJWT(ctx: Req_Auth) {
 
-		return "";
+		try {
+			const validUser = tokenJwt.validDataToken(ctx.user, ctx.password, ctx.secret)
+
+			return validUser
+			
+		} catch (error) {
+			throw new Error("User without access");
+		}
 	}
 }

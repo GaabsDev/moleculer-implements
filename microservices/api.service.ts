@@ -1,6 +1,11 @@
 import {IncomingMessage} from "http";
 import {Service, ServiceBroker, Context} from "moleculer";
 import ApiGateway from "moleculer-web";
+import { config } from "../config";
+import * as dotenv from 'dotenv'
+
+dotenv.config()
+
 
 export default class ApiService extends Service {
 
@@ -12,7 +17,7 @@ export default class ApiService extends Service {
 			mixins: [ApiGateway],
 			// More info about settings: https://moleculer.services/docs/0.14/moleculer-web.html
 			settings: {
-				port: process.env.PORT || 3000,
+				port: config.PORT,
 
 				routes: [{
 					path: "/api",
@@ -70,12 +75,16 @@ export default class ApiService extends Service {
 					bodyParsers: {
 						json: {
 							strict: false,
-							limit: "1MB",
+							limit: "2MB",
 						},
 						urlencoded: {
 							extended: true,
-							limit: "1MB",
+							limit: "2MB",
 						},
+						xml:{
+							extended: true,
+							limit: "2MB",
+						}
 					},
 
 					// Mapping policy setting. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Mapping-policy
@@ -112,34 +121,7 @@ export default class ApiService extends Service {
 				 * @param {IncomingMessage} req
 				 * @returns {Promise}
 
-				async authenticate (ctx: Context, route: any, req: IncomingMessage): Promise < any >  => {
-					// Read the token from header
-					const auth = req.headers.authorization;
-
-					if (auth && auth.startsWith("Bearer")) {
-						const token = auth.slice(7);
-
-						// Check the token. Tip: call a service which verify the token. E.g. `accounts.resolveToken`
-						if (token === "123456") {
-							// Returns the resolved user. It will be set to the `ctx.meta.user`
-							return {
-								id: 1,
-								name: "John Doe",
-							};
-
-						} else {
-							// Invalid token
-							throw new ApiGateway.Errors.UnAuthorizedError(ApiGateway.Errors.ERR_INVALID_TOKEN, {
-								error: "Invalid Token",
-							});
-						}
-
-					} else {
-						// No token. Throw an error or do nothing if anonymous access is allowed.
-						// Throw new E.UnAuthorizedError(E.ERR_NO_TOKEN);
-						return null;
-					}
-				},
+				
 				 */
 
 				/**
@@ -152,6 +134,7 @@ export default class ApiService extends Service {
 				 * @param {IncomingMessage} req
 				 * @returns {Promise}
 
+				
 				async authorize (ctx: Context < any, {
 					user: string;
 				} > , route: Record<string, undefined>, req: IncomingMessage): Promise < any > => {
